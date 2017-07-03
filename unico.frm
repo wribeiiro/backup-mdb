@@ -51,7 +51,7 @@ Begin VB.Form frmPrincipal
          Height          =   285
          Left            =   120
          TabIndex        =   2
-         Text            =   "c:\jean\marcelo"
+         Text            =   "C:\Documentos"
          Top             =   600
          Width           =   3735
       End
@@ -143,44 +143,44 @@ Attribute VB_GlobalNameSpace = False
 Attribute VB_Creatable = False
 Attribute VB_PredeclaredId = True
 Attribute VB_Exposed = False
-Private Sub ScriptControl1_Error()
-
-End Sub
-
 'Wellisson 30-11-2016
 Private Sub btnExecutar_Click()
+
     frameAjuste = True
     labelA.Caption = "Aguarde..."
     labelStatus.Caption = "Copiando os arquivos..."
-    labelA.Refresh
-    labelStatus.Refresh
     Screen.MousePointer = vbHourglass
     
     Dim FSO As New FileSystemObject
-        If checkFull.Value = 0 Then
-            If Not FSO.FolderExists(txtDestino.Text) = True Then
-                FSO.CreateFolder txtDestino.Text
-            End If
-         
-            If FSO.FolderExists(txtOrigem.Text) = True Then
-                FSO.CopyFile txtOrigem.Text & "\bdmarc.mdb", txtDestino.Text, True
-                FSO.CopyFile txtOrigem.Text & "\bdconfig.mdb", txtDestino.Text, True
-                FSO.CopyFile txtOrigem.Text & "\bdfiscal.mdb", txtDestino.Text, True
-                MsgBox "Backup Concluído com êxito!", vbInformation, "Backup do Sistema"
-            Else
-                MsgBox "Nenhum arquivo encontra, por favor verifique!", vbInformation, "Backup do Sistema"
-            End If
-        Else
-            If FSO.FolderExists(txtOrigem.Text) = True Then
-                FSO.CopyFolder txtOrigem.Text, txtDestino.Text & "FULL-BACKUP-" & Format(Date, "DD-MM-YYYY"), True
-                MsgBox "Backup realizado com sucesso!", vbInformation, "Backup do sistema"
-            Else
-                MsgBox "O diretório não foi encontrado, por favor verifique!", vbInformation, "Backup do sistema"
-            End If
+    
+    If checkFull.Value = False Then
+        If Not FSO.FolderExists(txtDestino.Text) = True Then
+            MsgBox "Pasta Backup não existe, o sistema irá cria-la automaticamente!", vbInformation, "Sistema"
+            FSO.CreateFolder txtDestino.Text
         End If
-    End
-erro:
-MsgBox Err.Number & " - " & Err.Description, vbCritical, "Backup do Sistema"
+        
+     
+        If FSO.FolderExists(txtOrigem.Text) = True Then
+            'FSO.CopyFile txtOrigem.Text & "\bdconfig.mdb", txtDestino.Text, True
+            FSO.CopyFile txtOrigem.Text & "\*.txt", txtDestino.Text, True
+            MsgBox "Backup Concluído com êxito!", vbInformation, "Backup do Sistema"
+        Else
+            MsgBox "Nenhum arquivo encontrado, por favor verifique!", vbInformation, "Backup do Sistema"
+        End If
+    Else
+        If FSO.FolderExists(txtOrigem.Text) = True Then
+            FSO.CopyFolder txtOrigem.Text, txtDestino.Text & "FULL-" & Format(Date, "DD-MM-YYYY"), True
+            MsgBox "Backup realizado com sucesso!", vbInformation, "Backup do sistema"
+        Else
+            MsgBox "O diretório não foi encontrado, por favor verifique!", vbInformation, "Backup do sistema"
+        End If
+    End If
+    labelA.Refresh
+    labelStatus.Refresh
+    Screen.MousePointer = vbDefault
+    
+'erro:
+    'MsgBox Err.Number & " - " & Err.Description, vbCritical, "Backup do Sistema"
 End Sub
 Private Sub btnSair_Click()
     End
